@@ -1,0 +1,133 @@
+(defvar package-list '(solarized-theme
+                       better-defaults
+                       projectile
+                       company
+                       clojure-mode
+                       cider
+                       paredit
+                       clj-refactor
+                       rainbow-delimiters
+                       slime
+                       lua-mode
+                       autopair
+                       flycheck
+                       irony
+                       company-irony
+                       flycheck-irony
+                       web-mode
+                       geiser))
+
+(require 'package)
+
+(add-to-list 'package-archives
+	     '("melpa" . "https://melpa.org/packages/") t)
+
+(when (< emacs-major-version 24)
+  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
+
+;; Initialize MELPA packages
+(package-initialize)
+
+;; Refresh all MELPA packages list in addition to ELPA packages
+(unless package-archive-contents
+  (package-refresh-contents))
+
+;; Install packages from package-list
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+
+;; Show line numbers
+(global-linum-mode t)
+
+;; Load Solarized Dark theme
+(load-theme 'solarized-dark t)
+
+;; Company mode
+(add-hook 'after-init-hook 'global-company-mode)
+
+;; SLIME
+(load (expand-file-name "~/quicklisp/slime-helper.el"))
+;; (setq inferior-lisp-program "/usr/local/bin/ecl")
+(setq inferior-lisp-program "/usr/local/bin/sbcl")
+(setq slime-contribs '(slime-fancy))
+
+;; Paredit
+(add-hook 'clojure-mode-hook    #'paredit-mode)
+(add-hook 'cider-repl-mode-hook #'paredit-mode)
+(add-hook 'emacs-lisp-mode-hook #'paredit-mode)
+(add-hook 'lisp-mode-hook       #'paredit-mode)
+(add-hook 'slime-repl-mode-hook #'paredit-mode)
+
+;; Rainbow Delimiters
+(add-hook 'clojure-mode-hook    #'rainbow-delimiters-mode)
+(add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)
+(add-hook 'emacs-lisp-mode-hook #'rainbow-delimiters-mode)
+(add-hook 'lisp-mode-hook       #'rainbow-delimiters-mode)
+(add-hook 'slime-repl-mode-hook #'rainbow-delimiters-mode)
+
+;; clj-refactor
+(require 'clj-refactor)
+(add-hook 'clojure-mode-hook (lambda ()
+                               (clj-refactor-mode 1)
+                               (yas-minor-mode 1)
+                               (cljr-add-keybindings-with-prefix "C-c C-m")))
+
+;; Lua mode
+(autoload 'lua-mode "lua-mode" "Lua editing mode." t)
+(add-to-list 'auto-mode-alist '("\\.lua$" . lua-mode))
+(add-to-list 'interpreter-mode-alist '("lua" . lua-mode))
+
+;; C, C++
+(setq c-default-style "k&r"
+      c-basic-offset 4)
+(require 'cc-mode)
+(define-key c-mode-base-map (kbd "\C-j") 'newline-and-indent)
+
+;; irony-mode
+(add-hook 'c++-mode-hook 'irony-mode)
+(add-hook 'c-mode-hook 'irony-mode)
+(defun my-irony-mode-hook ()
+  (define-key irony-mode-map [remap completion-at-point]
+    'irony-completion-at-point-async)
+  (define-key irony-mode-map [remap complete-symbol]
+    'irony-completion-at-point-async))
+(add-hook 'irony-mode-hook 'my-irony-mode-hook)
+(add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
+;; company-irony
+(eval-after-load 'company
+  '(add-to-list 'company-backends 'company-irony))
+
+;; flycheck-irony
+(eval-after-load 'flycheck
+  '(add-hook 'flycheck-mode-hook #'flycheck-irony-setup))
+
+;; Automatically add closing bracket
+(require 'autopair)
+(autopair-global-mode 1)
+(setq autopair-autowrap t)
+
+;; Flycheck
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
+;; Web-mode
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.ftl\\'" . web-mode))
+(add-hook 'web-mode-hook '(lambda ()
+                            (setq web-mode-markup-indent-offset 2)))
+
+;; Kawa
+(defun run-kawa ()
+  (interactive)
+  (require 'cmuscheme)
+  (let ((scheme-program-name "/usr/local/bin/kawa"))
+    (run-scheme scheme-program-name)))
