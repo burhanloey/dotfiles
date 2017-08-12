@@ -1,0 +1,9 @@
+# Old screen config for dev without docker
+
+screen keynav
+screen -t tcv3 sh -c "cd ~/Web/trustedcompany_v3/; ./migrate.sh; exec bash"
+screen -t tcv4 sh -c "cd ~/Web/trustedcompany_play/; sbt clean run; exec bash"
+screen -t git sh -c "cd ~/Web/trustedcompany_play; exec bash"
+screen -t mysql sh -c "mysql -u root -proot -D trustedcompany_com"
+screen sh -c "mkdir /tmp/play; mkdir /tmp/play/product_ipc; chmod -R 777 /tmp/play"
+screen sudo service nginx start

@@ -1,0 +1,5 @@
+# Default screen config
+
+screen keynav
+screen bash
+screen sh -c "xdotool key ctrl+shift+t type 'export TERM=xterm-256color' && xdotool key KP_Enter type 'emacs -nw' && xdotool key KP_Enter"
