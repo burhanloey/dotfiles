@@ -2,4 +2,5 @@
 
 screen keynav
 screen -t docker sh -c "cd ~/web-docker/local-compose; sudo bash control.sh all start; exec bash"
-screen bash
+screen -t git sh -c "cd /opt/tcv4; exec bash"
+screen -t mysql sh -c "mysql -u root -proot -D trustedcompany_com"
