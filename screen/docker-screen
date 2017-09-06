@@ -1,0 +1,5 @@
+# Config for development environment with docker
+
+screen keynav
+screen -t docker sh -c "cd ~/web-docker/local-compose; sudo bash control.sh all start; exec bash"
+screen bash
