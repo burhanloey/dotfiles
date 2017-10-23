@@ -37,15 +37,14 @@ values."
      racket
      nginx
      sql
-     markdown
      javascript
+     react
      typescript
      php
      html
      clojure
      common-lisp
      scheme
-     org
      asciidoc
      latex
      ;; ----------------------------------------------------------------
@@ -58,8 +57,8 @@ values."
      ;; better-defaults
      emacs-lisp
      ;; git
-     ;; markdown
-     ;; org
+     markdown
+     org
      ;; (shell :variables
      ;;        shell-default-height 30
      ;;        shell-default-position 'bottom)
@@ -321,6 +320,8 @@ you should place your code here."
   (add-hook 'emacs-lisp-mode-hook #'paredit-mode)
   (add-hook 'lisp-mode-hook #'paredit-mode)
   (add-hook 'slime-repl-mode-hook #'paredit-mode)
+  (add-hook 'web-mode-hook (lambda ()
+                             (setq web-mode-markup-indent-offset 2)))
   (global-company-mode)
   (require 'nginx-mode)
   (setq inferior-lisp-program "/usr/bin/sbcl"))
