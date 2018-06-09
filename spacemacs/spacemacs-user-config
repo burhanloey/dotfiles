@@ -1,0 +1,7 @@
+  ;; For smaller text
+  (zoom-frm-out)
+
+  ;; Custom indentation for Clojure macro
+  (add-hook 'clojure-mode-hook
+            (lambda ()
+              (put-clojure-indent 'defui '(1 (:defn)))))
