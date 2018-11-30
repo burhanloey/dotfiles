@@ -5,3 +5,6 @@
   (add-hook 'clojure-mode-hook
             (lambda ()
               (put-clojure-indent 'defui '(1 (:defn)))))
+              
+  ;; Change indentation for html to 2
+  (setq web-mode-markup-indent-offset 2)
